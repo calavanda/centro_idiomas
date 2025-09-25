@@ -2,7 +2,7 @@
 
 return [
 
-    'name' => env('APP_NAME', 'Bagisto'),
+    'name' => env('APP_NAME', 'Centro de Idiomas'),
 
     'env' => env('APP_ENV', 'production'),
 
@@ -16,15 +16,15 @@ return [
 
     'timezone' => env('APP_TIMEZONE', 'Asia/Kolkata'),
 
-    'locale' => env('APP_LOCALE', 'en'),
+    'locale' => env('APP_LOCALE', 'es'),
 
-    'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
+    'fallback_locale' => env('APP_FALLBACK_LOCALE', 'es'),
 
-    'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
+    'faker_locale' => env('APP_FAKER_LOCALE', 'es_ES'),
 
     'default_country' => null,
 
-    'currency' => env('APP_CURRENCY', 'USD'),
+    'currency' => env('APP_CURRENCY', 'MXN'),
 
     'channel' => 'default',
 
