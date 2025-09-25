@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace app\Services;
 
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\Database;

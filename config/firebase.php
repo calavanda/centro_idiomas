@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'credentials' => env('FIREBASE_CREDENTIALS'),
+    'credentials_file' => env('FIREBASE_CREDENTIALS'),
     'database_url' => env('FIREBASE_DATABASE_URL'),
 ];
