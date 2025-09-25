@@ -21,6 +21,11 @@
     RewriteRule ^ index.php [L]
 </IfModule>
 
+<Directory /var/www/html/public>
+    AllowOverride All
+    Require all granted
+</Directory>
+
 # Media Files Cache-Control
 <FilesMatch ".(jpg|jpeg|gif|png|svg|swf|webp)$">
     <IfModule mod_headers.c>
