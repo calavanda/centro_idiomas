@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y \
 # Habilitar módulos de Apache
 RUN a2enmod rewrite
 
-# Configuración de VirtualHost para Laravel (fijo en 80, se reescribe en CMD)
+# Configuración de VirtualHost para Laravel (DocumentRoot en /public)
 RUN echo '<VirtualHost *:80>\n\
     DocumentRoot /var/www/html/public\n\
     <Directory /var/www/html/public>\n\
@@ -45,10 +45,10 @@ RUN composer install --no-dev --optimize-autoloader
 RUN chown -R www-data:www-data storage bootstrap/cache
 RUN chmod -R 775 storage bootstrap/cache
 
-# Exponer puerto por defecto
+# Exponer puerto (Railway lo pasará vía $PORT)
 EXPOSE 80
 
-# Reemplazar el puerto en runtime con $PORT y arrancar Apache
+# Arrancar Apache con puerto dinámico
 CMD sed -i "s/Listen 80/Listen ${PORT}/" /etc/apache2/ports.conf && \
     sed -i "s/*:80/*:${PORT}/" /etc/apache2/sites-available/000-default.conf && \
     apache2-foreground
