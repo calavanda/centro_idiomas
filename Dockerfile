@@ -1,14 +1,13 @@
-# Usa PHP con Apache
 FROM php:8.2-apache
 
-# Instala extensiones necesarias
+# Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y \
     libzip-dev \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
     libicu-dev \
-    zip \
+    zlib1g-dev \
     unzip \
     git \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
@@ -16,24 +15,26 @@ RUN apt-get update && apt-get install -y \
         gd \
         intl \
         calendar \
+        zip \
         pdo \
-        pdo_mysql \
-        zip
+        pdo_mysql
 
-# Copia el código fuente
+# Habilitar módulos de Apache (opcional para Laravel)
+RUN a2enmod rewrite
+
+# Copiar los archivos del proyecto
 COPY . /var/www/html
 
-# Establece el directorio de trabajo
 WORKDIR /var/www/html
 
-# Copia Composer desde imagen oficial
+# Copiar Composer desde imagen oficial
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Instala dependencias PHP (ya con todas las extensiones disponibles)
+# Instalar dependencias de Laravel
 RUN composer install --no-dev --optimize-autoloader
 
-# Da permisos a Laravel
+# Permisos para Laravel
 RUN chown -R www-data:www-data storage bootstrap/cache
 
-# Expone el puerto
+# Puerto expuesto
 EXPOSE 80
