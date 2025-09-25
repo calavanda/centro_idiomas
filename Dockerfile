@@ -19,10 +19,10 @@ RUN apt-get update && apt-get install -y \
         pdo \
         pdo_mysql
 
-# Habilitar módulos de Apache (opcional para Laravel)
+# Habilitar módulos de Apache
 RUN a2enmod rewrite
 
-# Configurar Apache para que use /var/www/html/public como DocumentRoot
+# Configuración de VirtualHost para Laravel (fijo en 80, se reescribe en CMD)
 RUN echo '<VirtualHost *:80>\n\
     DocumentRoot /var/www/html/public\n\
     <Directory /var/www/html/public>\n\
@@ -31,9 +31,8 @@ RUN echo '<VirtualHost *:80>\n\
     </Directory>\n\
 </VirtualHost>' > /etc/apache2/sites-available/000-default.conf
 
-# Copiar los archivos del proyecto
+# Copiar archivos del proyecto
 COPY . /var/www/html
-
 WORKDIR /var/www/html
 
 # Copiar Composer desde imagen oficial
@@ -46,8 +45,10 @@ RUN composer install --no-dev --optimize-autoloader
 RUN chown -R www-data:www-data storage bootstrap/cache
 RUN chmod -R 775 storage bootstrap/cache
 
-# Puerto expuesto
+# Exponer puerto por defecto
 EXPOSE 80
 
-# Arrancar Apache en primer plano (requerido para Docker)
-CMD ["apache2-foreground"]
+# Reemplazar el puerto en runtime con $PORT y arrancar Apache
+CMD sed -i "s/Listen 80/Listen ${PORT}/" /etc/apache2/ports.conf && \
+    sed -i "s/*:80/*:${PORT}/" /etc/apache2/sites-available/000-default.conf && \
+    apache2-foreground
