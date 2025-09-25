@@ -41,9 +41,17 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Instalar dependencias de Laravel
 RUN composer install --no-dev --optimize-autoloader
 
+RUN php artisan config:clear && \
+    php artisan config:cache && \
+    php artisan route:cache && \
+    php artisan view:cache
+
 # Permisos para Laravel
 RUN chown -R www-data:www-data storage bootstrap/cache
 RUN chmod -R 775 storage bootstrap/cache
+
+RUN chown -R www-data:www-data storage bootstrap/cache && \
+    chmod -R 775 storage bootstrap/cache
 
 # Exponer puerto (Railway lo pasará vía $PORT)
 EXPOSE 80
